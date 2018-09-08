@@ -1,31 +1,42 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <GmapMap
+      :center="{lat:51.5074, lng:0.1278}"
+      :zoom="11"
+      map-type-id="terrain"
+      style="width: 100%; height: 100%"
+    >
+      <GmapCluster :gridSize="50">
+        <GmapMarker
+          v-for="(p, i) in places"
+          :index="i"
+          :key="i"
+          :position="{lat:p.FIELD2, lng:p.FIELD1}"
+          :clickable="true"
+          :draggable="false"
+        />
+      </GmapCluster>
+    </GmapMap>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import { data } from "../data.js"
+import GmapCluster from 'vue2-google-maps/dist/components/cluster' // replace src with dist if you have Babel issues
+export default {
+  name: 'App',
+  data () {
+    return {
+      places: data
+    }
+  },
+  components: {
+    GmapCluster
+  },
+  methods: {
+    hello() {
+      this.$refs.map.panTo({lat: 1.38, lng: 103.80})
+    }
+  }
 }
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+</script>
